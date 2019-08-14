@@ -8,17 +8,17 @@ using Microsoft.Extensions.Configuration;
 namespace Configgy.Microsoft.Extensions.Configuration.Source
 {
     /// <summary>
-    /// An <see cref="IValueSource"/> that gets values from any <see cref="IConfigurationRoot"/>.
+    /// An <see cref="IValueSource"/> that gets values from any <see cref="IConfiguration"/>.
     /// </summary>
     public class ConfigurationRootSource : ValueSourceAttributeBase
     {
         /// <summary>
-        /// The <see cref="IConfigurationRoot"/> this <see cref="ConfigurationRootSource"/> uses to get values.
+        /// The <see cref="IConfiguration"/> this <see cref="ConfigurationRootSource"/> uses to get values.
         /// </summary>
-        public IConfigurationRoot ConfigurationRoot { get; }
+        public IConfiguration Configuration { get; }
 
         /// <summary>
-        /// Constructs a <see cref="ConfigurationRootSource"/> using a default <see cref="IConfigurationRoot"/> that follows the same logic as the standard .NET Core MVC template.
+        /// Constructs a <see cref="ConfigurationRootSource"/> using a default <see cref="IConfiguration"/> that follows the same logic as the standard .NET Core MVC template.
         /// </summary>
         public ConfigurationRootSource()
         {
@@ -27,21 +27,21 @@ namespace Configgy.Microsoft.Extensions.Configuration.Source
             var environment = Environment.GetEnvironmentVariable(environmentVariableName);
 
             var builder = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-            .AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: true)
-            .AddEnvironmentVariables();
+	            .SetBasePath(Directory.GetCurrentDirectory())
+	            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+	            .AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: true)
+	            .AddEnvironmentVariables();
 
-            ConfigurationRoot = builder.Build();
+            Configuration = builder.Build();
         }
 
         /// <summary>
-        /// Constructs a <see cref="ConfigurationRootSource"/> using the given <see cref="IConfigurationRoot"/>.
+        /// Constructs a <see cref="ConfigurationRootSource"/> using the given <see cref="IConfiguration"/>.
         /// </summary>
-        /// <param name="configurationRoot">The <see cref="IConfigurationRoot"/> to use when searching for configuration values.</param>
-        public ConfigurationRootSource(IConfigurationRoot configurationRoot)
+        /// <param name="configuration">The <see cref="IConfiguration"/> to use when searching for configuration values.</param>
+        public ConfigurationRootSource(IConfiguration configuration)
         {
-            ConfigurationRoot = configurationRoot;
+            Configuration = configuration;
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace Configgy.Microsoft.Extensions.Configuration.Source
             var prefix = (property as ICustomAttributeProvider)?.GetCustomAttributes(true).OfType<ConfigurationRootPrefixAttribute>().SingleOrDefault();
 
             // The initial section is the root configuration
-            var section = ConfigurationRoot as IConfiguration;
+            var section = Configuration as IConfiguration;
 
             // If there is a prefix get the value from the section
             if (prefix?.Prefixes != null)

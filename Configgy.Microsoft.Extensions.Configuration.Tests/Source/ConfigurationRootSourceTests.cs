@@ -32,7 +32,7 @@ namespace Configgy.Microsoft.Extensions.Configuration.Tests.Source
 
             var source = new ConfigurationRootSource(rootMock.Object);
 
-            Assert.AreSame(rootMock.Object, source.ConfigurationRoot);
+            Assert.AreSame(rootMock.Object, source.Configuration);
         }
 
         [TestMethod]
